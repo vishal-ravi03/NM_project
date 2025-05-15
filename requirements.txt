@@ -5,3 +5,5 @@ langchain_community
 langchain_groq
 streamlit
 PyPDF2
+langchain_google_genai
+langchain_huggingface
