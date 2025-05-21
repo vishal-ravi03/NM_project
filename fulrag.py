@@ -178,7 +178,7 @@ st.title("✨ Summarize Smarter with :blue[RAG Technology]")
 class Config:
     arbitrary_types_allowed = True
 
-api_key=os.getenv("groq_api")
+
 # api_key1=os.getenv("google_api")
 
 
@@ -189,15 +189,15 @@ api_key1=st.sidebar.text_input("Enter the Groq API key",type="password")
 doc=st.sidebar.file_uploader(" Summarization Sectore", type=["pdf"],key=1)
 doc1=st.sidebar.file_uploader("Chat your own Data", type=["pdf"],key=2)
 
-if api_key:
+if api_key1:
      LLM=ChatGroq(
-          api_key=api_key,
+          api_key=api_key1,
           model="llama3-8b-8192"
      )
 
  
 else:
-    print("pleae load you api key")
+    pass
 
 def get_text(file):
     if file is not None:
@@ -254,10 +254,12 @@ if doc1:
             split_docs = splitter.split_documents(data)
             st.write(f' No fo chunk {len(split_docs)}')
             # embeddings = GoogleGenerativeAIEmbeddings(google_api_key=api_key1,model="models/embedding-001")
-            embeddings=HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
-            vector_store = FAISS.from_documents(split_docs, embedding=embeddings)
-            vector_store.save_local(store_data)
-            
+            with st.spinner("Embedding........💽"):
+                embeddings=HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
+                vector_store = FAISS.from_documents(split_docs, embedding=embeddings)
+                vector_store.save_local(store_data)
+            with st.spinner("Chatting selection is opening........."):
+                 pass
 
 else:
         
@@ -287,8 +289,8 @@ if os.path.exists(store_data):
 
     
 
-
-retriever = vector_store.as_retriever(search_type="similarity", search_kwargs={"k": 5})
+with st.status("retriever data...", expanded=True):
+    retriever = vector_store.as_retriever(search_type="similarity", search_kwargs={"k": 5})
 
  
 
